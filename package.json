@@ -2,7 +2,6 @@
   "name": "fsany",
   "version": "0.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "vitest -w"
@@ -21,11 +20,15 @@
   },
   "homepage": "https://github.com/AntzyMo/fsany#readme",
   "devDependencies": {
+    "@antzy/eslint-config": "^0.0.1",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.0.0",
+    "eslint": "^8.19.0",
+    "tsup": "^6.1.3",
     "vitest": "^0.16.0"
   },
   "dependencies": {
-    "fs-extra": "^10.1.0"
+    "fs-extra": "^10.1.0",
+    "typescript": "^4.7.4"
   }
 }
