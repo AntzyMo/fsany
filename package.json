@@ -1,6 +1,6 @@
 {
   "name": "fsany",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "is a fs toolkit",
   "type": "module",
   "main": "./distindex.js",
@@ -11,6 +11,7 @@
       "default": "./dist/index.js"
     }
   },
+  "files": ["dist"],
   "scripts": {
     "test": "vitest -w",
     "build":"tsup ./src/index.ts --format esm,cjs --dts"
