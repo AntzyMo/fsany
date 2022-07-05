@@ -1,10 +1,19 @@
 {
   "name": "fsany",
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "is a fs toolkit",
+  "type": "module",
+  "main": "./distindex.js",
+  "types": "./dist/index.d.ts",
+  "exports":{
+    ".": {
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "test": "vitest -w"
+    "test": "vitest -w",
+    "build":"tsup ./src/index.ts --format esm,cjs --dts"
   },
   "repository": {
     "type": "git",
@@ -13,6 +22,9 @@
   "keywords": [
     "fs"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "AntzyMo <mozbnao@163.com>",
   "license": "ISC",
   "bugs": {
