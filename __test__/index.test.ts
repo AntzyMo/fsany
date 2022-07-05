@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { read, getexport, writeFile, initialPath } from '../src/index'
+import { getJSON, read, getexport, writeFile, initialPath } from '../src/index'
 
 it.skip('exports', async () => {
   await expect(getexport()).toMatchInlineSnapshot(`
@@ -113,4 +113,44 @@ describe.skip('read', () => {
       ]
     `)
   })
+})
+
+it('json', async () => {
+  const path = 'package.json'
+  expect(await getJSON(path)).toMatchInlineSnapshot(`
+    {
+      "author": 11,
+      "bugs": {
+        "url": "https://github.com/AntzyMo/fsany/issues",
+      },
+      "dependencies": {
+        "fs-extra": "^10.1.0",
+        "typescript": "^4.7.4",
+      },
+      "description": "",
+      "devDependencies": {
+        "@antzy/eslint-config": "^0.0.3",
+        "@types/fs-extra": "^9.0.13",
+        "@types/node": "^18.0.0",
+        "eslint": "^8.19.0",
+        "tsup": "^6.1.3",
+        "vitest": "^0.16.0",
+      },
+      "homepage": "https://github.com/AntzyMo/fsany#readme",
+      "keywords": [
+        "fs",
+      ],
+      "license": "ISC",
+      "main": "index.js",
+      "name": "fsany",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AntzyMo/fsany.git",
+      },
+      "scripts": {
+        "test": "vitest -w",
+      },
+      "version": "0.0.0",
+    }
+  `)
 })

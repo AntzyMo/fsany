@@ -1,7 +1,7 @@
 import { chdir } from 'process'
 import { promises as fs } from 'fs'
 import { resolve } from 'path'
-import { outputFile, remove as fsRemove, copy as fsCopy, move as fsMove } from 'fs-extra'
+import { outputFile, readJSON, writeJson, remove as fsRemove, copy as fsCopy, move as fsMove } from 'fs-extra'
 
 type stringOrArray=string[] | string
 
@@ -46,6 +46,13 @@ export const move = async (src:stringOrArray, dest:stringOrArray) => {
 export const remove = async (path:stringOrArray) => {
   const handlePath = initialPath(path)
   await fsRemove(handlePath)
+}
+
+export const getJSON = async (path:stringOrArray) => {
+  const handlePath = initialPath(path)
+  const json = await readJSON(handlePath)
+
+  return json
 }
 
 // 进入目录
