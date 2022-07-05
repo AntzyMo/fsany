@@ -1,7 +1,7 @@
 import { chdir } from 'process'
 import { promises as fs } from 'fs'
 import { resolve } from 'path'
-import { outputFile, readJSON, writeJson, remove as fsRemove, copy as fsCopy, move as fsMove } from 'fs-extra'
+import { outputFile, readJSON, remove as fsRemove, copy as fsCopy, move as fsMove } from 'fs-extra'
 
 type stringOrArray=string[] | string
 
