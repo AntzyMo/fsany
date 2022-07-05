@@ -37,12 +37,12 @@ it.skip('exports', async () => {
     `)
 })
 
-it('initialPath', () => {
-  const path = 'test/vvv'
+it.skip('initialPath', () => {
+  const path = './index.js'
   const pathArr = ['tsts', '1', '2']
-  expect(initialPath(path)).toMatchInlineSnapshot('"E:\\\\testBox\\\\AntzyMo\\\\fsany\\\\test\\\\vvv"')
+  expect(initialPath(path)).toMatchInlineSnapshot('"/Users/antzymo/Desktop/AntzyMo/fsany/index.js"')
 
-  expect(initialPath(pathArr)).toMatchInlineSnapshot('"E:\\\\testBox\\\\AntzyMo\\\\fsany\\\\tsts\\\\1\\\\2"')
+  expect(initialPath(pathArr)).toMatchInlineSnapshot('"/Users/antzymo/Desktop/AntzyMo/fsany/tsts/1/2"')
 })
 
 describe.skip('writeTest', () => {
@@ -59,55 +59,58 @@ describe.skip('writeTest', () => {
   })
 })
 
-it('read', async () => {
-  const path = 'src/index.ts'
-  expect(await read(path)).toMatchInlineSnapshot(`
-    "import { chdir } from 'process'
-    import { promises as fs } from 'fs'
-    import { isAbsolute, resolve } from 'path'
-    import { pathExists, outputFile } from 'fs-extra'
+describe.skip('read', () => {
+  it('readfile', async () => {
+    const path = 'src/index.ts'
+    expect(await read(path)).toMatchInlineSnapshot(`
+      "import { chdir } from 'process'
+      import { promises as fs } from 'fs'
+      import { resolve } from 'path'
+      import { outputFile } from 'fs-extra'
 
-    export const getexport = () => {
-      return fs
-    }
-
-    export const initialPath = (path:string[] | string) => {
-      const cwd = process.cwd()
-      const handlePath = typeof path === 'string' ? [path] : path
-      // 判断是否是绝对路径
-      const isAbsolutePath = isAbsolute(handlePath[0])
-      const newPath = isAbsolutePath ? [...handlePath] : [cwd, ...handlePath]
-      return resolve(...newPath)
-    }
-
-    // write file
-    export const writeFile = async (file:string[]| string, data:string) => {
-      const path = initialPath(file)
-      await outputFile(path, data)
-    }
-
-    // read file or Dir
-    export const read = async (file:string[]| string) => {
-      const path = initialPath(file)
-      const isFile = path.includes('.')
-      return await fs.readFile(path, { encoding: 'utf-8' })
-      // try {
-      //   if (isFile) {
-      //     return await fs.readFile(path, { encoding: 'utf-8' })
-      //   }
-      // } catch (err) {
-      //   Promise.reject(err)
-      // }
-    }
-
-    // 进入目录
-    export const cd = async (path:string) => {
-      try {
-        await chdir(path)
-      } catch (err) {
-        Promise.reject(err)
+      export const getexport = () => {
+        return fs
       }
-    }
-    "
-  `)
+
+      export const initialPath = (path:string[] | string) => {
+        const handlePath = typeof path === 'string' ? [path] : path
+        return resolve(...handlePath)
+      }
+
+      // write file
+      export const writeFile = async (file:string[]| string, data:string) => {
+        const path = initialPath(file)
+        await outputFile(path, data)
+      }
+
+      // read file or Dir
+      export const read = async (file:string[]| string) => {
+        const path = initialPath(file)
+        const isFile = path.includes('.')
+        if (isFile) {
+          return await fs.readFile(path, { encoding: 'utf-8' })
+        } else {
+          return await fs.readdir(path, { encoding: 'utf-8' })
+        }
+      }
+
+      // 进入目录
+      export const cd = async (path:string) => {
+        try {
+          await chdir(path)
+        } catch (err) {
+          Promise.reject(err)
+        }
+      }
+      "
+    `)
+  })
+  it('readDir', async () => {
+    const path = 'src'
+    expect(await read(path)).toMatchInlineSnapshot(`
+      [
+        "index.ts",
+      ]
+    `)
+  })
 })
