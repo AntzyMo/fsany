@@ -1,32 +1,39 @@
 import { chdir } from 'process'
 import { promises as fs } from 'fs'
-import { isAbsolute } from 'path'
-import { fileURLToPath, URL } from 'url'
+import { isAbsolute, resolve } from 'path'
+import { pathExists, outputFile } from 'fs-extra'
+
 export const getexport = () => {
   return fs
 }
 
-const initialPath = (path:string) => {
-  console.log(path, 'ww')
-  if (isAbsolute(path)) {
-    return path
-  } else {
-    console.log(new URL(path, import.meta.url), 'sss')
-    return fileURLToPath(new URL(path, import.meta.url))
-  }
-}
-
-// read file
-export const read = async (arg:string) => {
-  const path = initialPath(arg)
-  return await fs.readFile(path, { encoding: 'utf-8' })
+export const initialPath = (path:string[] | string) => {
+  const cwd = process.cwd()
+  const handlePath = typeof path === 'string' ? [path] : path
+  // 判断是否是绝对路径
+  const isAbsolutePath = isAbsolute(handlePath[0])
+  const newPath = isAbsolutePath ? [...handlePath] : [cwd, ...handlePath]
+  return resolve(...newPath)
 }
 
 // write file
-export const write = async (file:string, data:string) => {
+export const writeFile = async (file:string[]| string, data:string) => {
   const path = initialPath(file)
-  console.log(path, 'path')
-  await fs.writeFile(path, data, { encoding: 'utf-8' })
+  await outputFile(path, data)
+}
+
+// read file or Dir
+export const read = async (file:string[]| string) => {
+  const path = initialPath(file)
+  const isFile = path.includes('.')
+  return await fs.readFile(path, { encoding: 'utf-8' })
+  // try {
+  //   if (isFile) {
+  //     return await fs.readFile(path, { encoding: 'utf-8' })
+  //   }
+  // } catch (err) {
+  //   Promise.reject(err)
+  // }
 }
 
 // 进入目录
