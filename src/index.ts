@@ -1,23 +1,19 @@
-import { chdir } from 'process'
+import { chdir, cwd } from 'process'
 import { promises as fs } from 'fs'
 import { resolve } from 'path'
-import { outputFile, readJSON, remove as fsRemove, copy as fsCopy, move as fsMove } from 'fs-extra'
+import fskit from 'fs-extra'
 
 type stringOrArray=string[] | string
 
-export const getexport = () => {
-  return fs
-}
-
 export const initialPath = (path:stringOrArray) => {
   const handlePath = typeof path === 'string' ? [path] : path
-  return resolve(...handlePath)
+  return resolve(cwd(), ...handlePath)
 }
 
 // write file
 export const writeFile = async (file:stringOrArray, data:string) => {
   const path = initialPath(file)
-  await outputFile(path, data)
+  await fskit.outputFile(path, data)
 }
 
 // read file or Dir
@@ -34,32 +30,38 @@ export const read = async (file:stringOrArray) => {
 export const copy = async (src:stringOrArray, dest:stringOrArray) => {
   const path = initialPath(src)
   const destPath = initialPath(dest)
-  await fsCopy(path, destPath)
+  await fskit.copy(path, destPath)
 }
 
 export const move = async (src:stringOrArray, dest:stringOrArray) => {
   const path = initialPath(src)
   const destPath = initialPath(dest)
-  await fsMove(path, destPath)
+  await fskit.move(path, destPath)
 }
 
 export const remove = async (path:stringOrArray) => {
   const handlePath = initialPath(path)
-  await fsRemove(handlePath)
+  await fskit.remove(handlePath)
 }
 
 export const getJSON = async (path:stringOrArray) => {
   const handlePath = initialPath(path)
-  const json = await readJSON(handlePath)
+  const json = await fskit.readJSON(handlePath)
 
-  return json
+  const save = async () => {
+    await fskit.writeJSON(handlePath, json)
+  }
+
+  return { json, save }
 }
 
 // 进入目录
-export const cd = async (path:string) => {
+export const cd = async (path:stringOrArray) => {
+  const handlePath = initialPath(path)
+
   try {
-    await chdir(path)
-    return true
+    await chdir(handlePath)
+    return cwd()
   } catch (err) {
     return Promise.reject(err)
   }

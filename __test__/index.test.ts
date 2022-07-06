@@ -1,41 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getJSON, read, getexport, writeFile, initialPath } from '../src/index'
-
-it.skip('exports', async () => {
-  await expect(getexport()).toMatchInlineSnapshot(`
-      {
-        "access": [Function],
-        "appendFile": [Function],
-        "chmod": [Function],
-        "chown": [Function],
-        "copyFile": [Function],
-        "cp": [Function],
-        "lchmod": [Function],
-        "lchown": [Function],
-        "link": [Function],
-        "lstat": [Function],
-        "lutimes": [Function],
-        "mkdir": [Function],
-        "mkdtemp": [Function],
-        "open": [Function],
-        "opendir": [Function],
-        "readFile": [Function],
-        "readdir": [Function],
-        "readlink": [Function],
-        "realpath": [Function],
-        "rename": [Function],
-        "rm": [Function],
-        "rmdir": [Function],
-        "stat": [Function],
-        "symlink": [Function],
-        "truncate": [Function],
-        "unlink": [Function],
-        "utimes": [Function],
-        "watch": [Function],
-        "writeFile": [Function],
-      }
-    `)
-})
+import { getJSON, read, writeFile, initialPath } from '../src/index'
 
 it.skip('initialPath', () => {
   const path = './index.js'
@@ -117,9 +81,10 @@ describe.skip('read', () => {
 
 it('json', async () => {
   const path = 'package.json'
-  expect(await getJSON(path)).toMatchInlineSnapshot(`
+  const { json } = await getJSON(path)
+  expect(json).toMatchInlineSnapshot(`
     {
-      "author": 11,
+      "author": "AntzyMo <mozbnao@163.com>",
       "bugs": {
         "url": "https://github.com/AntzyMo/fsany/issues",
       },
@@ -127,7 +92,7 @@ it('json', async () => {
         "fs-extra": "^10.1.0",
         "typescript": "^4.7.4",
       },
-      "description": "",
+      "description": "is a fs toolkit",
       "devDependencies": {
         "@antzy/eslint-config": "^0.0.3",
         "@types/fs-extra": "^9.0.13",
@@ -136,21 +101,36 @@ it('json', async () => {
         "tsup": "^6.1.3",
         "vitest": "^0.16.0",
       },
+      "exports": {
+        ".": {
+          "default": "./dist/index.js",
+          "require": "./dist/index.cjs",
+        },
+      },
+      "files": [
+        "dist",
+      ],
       "homepage": "https://github.com/AntzyMo/fsany#readme",
       "keywords": [
         "fs",
       ],
       "license": "ISC",
-      "main": "index.js",
+      "main": "./distindex.js",
       "name": "fsany",
+      "publishConfig": {
+        "access": "public",
+      },
       "repository": {
         "type": "git",
         "url": "git+https://github.com/AntzyMo/fsany.git",
       },
       "scripts": {
+        "build": "tsup ./src/index.ts --format esm,cjs --dts",
         "test": "vitest -w",
       },
-      "version": "0.0.0",
+      "type": "module",
+      "types": "./dist/index.d.ts",
+      "version": "0.0.2",
     }
   `)
 })
