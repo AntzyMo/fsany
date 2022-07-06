@@ -18,6 +18,6 @@ jobs:
       - run: npm i pnpm -g
       - run: pnpm i
       - run: pnpm build
-      - run: pnpm publish --no-git-checks
+      - run: npm publish 
         env:
-          NODE_AUTH_TOKEN: ${{secrets.PUBLISH_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
